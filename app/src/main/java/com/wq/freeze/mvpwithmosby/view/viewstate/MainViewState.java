@@ -16,6 +16,7 @@ public class MainViewState implements RestorableParcelableViewState<MainView> {
 
     public String colorString = null;
     public String messageString = null;
+    private boolean isLoginShow = false;
 
     public static Creator<MainViewState> CREATOR = new Creator<MainViewState>(){
 
@@ -24,6 +25,9 @@ public class MainViewState implements RestorableParcelableViewState<MainView> {
             MainViewState mainViewState = new MainViewState();
             mainViewState.colorString = source.readString();
             mainViewState.messageString = source.readString();
+            boolean[] isLoginShowArray = new boolean[1];
+            source.readBooleanArray(isLoginShowArray);
+            mainViewState.isLoginShow = isLoginShowArray[0];
             return mainViewState;
         }
 
@@ -48,12 +52,14 @@ public class MainViewState implements RestorableParcelableViewState<MainView> {
     public void saveInstanceState(@NonNull Bundle out) {
         out.putString("color", colorString);
         out.putString("message", messageString);
+        out.putBoolean("isShowLogin", isLoginShow);
     }
 
     @Override
     public RestorableViewState<MainView> restoreInstanceState(Bundle in) {
         this.colorString  = in.getString("color");
         this.messageString = in.getString("message");
+        this.isLoginShow = in.getBoolean("isShowLogin");
         return this;
     }
 
@@ -62,9 +68,17 @@ public class MainViewState implements RestorableParcelableViewState<MainView> {
         if (colorString != null) {
             view.changeBgColor(colorString);
         }
+
+        if (isLoginShow) {
+            view.showLoginDialog();
+        }
     }
 
-    public void setState(String colorString) {
+    public void setColorState(String colorString) {
         this.colorString = colorString;
+    }
+
+    public void setIsLoginShow(boolean isShow) {
+        this.isLoginShow = isShow;
     }
 }

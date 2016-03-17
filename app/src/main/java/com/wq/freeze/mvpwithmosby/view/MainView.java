@@ -9,4 +9,9 @@ public interface MainView extends MvpView{
     void showSnackBar(String text);
 
     void changeBgColor(String color);
+
+    void showLoginDialog();
+
+    void showUserInvalid();
+    void gotoListUi();
 }

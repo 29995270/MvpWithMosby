@@ -1,5 +1,7 @@
 package com.wq.freeze.mvpwithmosby.view.impl;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,11 +9,10 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.wq.freeze.mvpwithmosby.R;
@@ -25,6 +26,7 @@ public class MainActivity extends MvpViewStateActivity<MainView, MainPresenter, 
     private FloatingActionButton fab;
     private CoordinatorLayout rootContent;
     private TextInputEditText editText;
+    private AlertDialog loginDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +69,57 @@ public class MainActivity extends MvpViewStateActivity<MainView, MainPresenter, 
 
     @Override
     public void changeBgColor(String color) {
-        viewState.setState(color);
+        viewState.setColorState(color);
         rootContent.setBackgroundColor(Color.parseColor(color));
+    }
+
+    @Override
+    public void showLoginDialog() {
+        viewState.setIsLoginShow(true);
+        loginDialog = new AlertDialog.Builder(this)
+                .setTitle("Login")
+                .setMessage("do you want login?")
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        viewState.setIsLoginShow(false);
+                        presenter.checkUserState(System.currentTimeMillis()%2 == 0);
+                    }
+                })
+                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        viewState.setIsLoginShow(false);
+                    }
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    @Override
+    public void showUserInvalid() {
+        Toast.makeText(this, "sorry failed", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void gotoListUi() {
+        startActivity(new Intent(this, ListActivity.class));
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (loginDialog != null && loginDialog.isShowing()) {
+            loginDialog.dismiss();
+        }
+        super.onDestroy();
     }
 
     @Override
     public void onClick(View v) {
         presenter.showMessage();
         presenter.changeColor();
+        presenter.showDialog();
     }
 }

@@ -26,4 +26,17 @@ public class MainPresenter extends MvpNullObjectBasePresenter<MainView> {
         String randomMessageString = model.getRandomMessageString();
         getView().showSnackBar(randomMessageString);
     }
+
+    public void showDialog() {
+        getView().showLoginDialog();
+    }
+
+    public void checkUserState(boolean isValid) {
+        //some logic to check user is valid
+        if (isValid) {
+            getView().gotoListUi();
+        } else {
+            getView().showUserInvalid();
+        }
+    }
 }
