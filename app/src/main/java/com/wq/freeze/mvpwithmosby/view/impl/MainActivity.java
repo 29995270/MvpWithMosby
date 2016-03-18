@@ -84,7 +84,8 @@ public class MainActivity extends MvpViewStateActivity<MainView, MainPresenter, 
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         viewState.setIsLoginShow(false);
-                        presenter.checkUserState(System.currentTimeMillis()%2 == 0);
+//                        presenter.checkUserState(System.currentTimeMillis()%2 == 0);
+                        presenter.checkUserState(true);
                     }
                 })
                 .setNegativeButton("NO", new DialogInterface.OnClickListener() {

@@ -5,8 +5,10 @@ import android.os.Looper;
 import android.os.SystemClock;
 
 import com.wq.freeze.mvpwithmosby.model.ListUiModel;
+import com.wq.freeze.mvpwithmosby.model.ModelCommonHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -16,23 +18,22 @@ import java.util.Random;
 public class ListUiModelImpl implements ListUiModel {
 
     private Random random  = new Random();
-    private Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     public void getRandomSingleString(final ResultCallback<String> callback) {
 
-        new Thread(new Runnable() {
+        ModelCommonHelper.EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
                 SystemClock.sleep(2000);
-                handler.post(new Runnable() {
+                ModelCommonHelper.MAIN_HANDLE.post(new Runnable() {
                     @Override
                     public void run() {
                         callback.onResult(String.valueOf(System.currentTimeMillis() + random.nextInt(100000)));
                     }
                 });
             }
-        }).start();
+        });
     }
 
     private String[] strings = new String[]{
@@ -56,23 +57,22 @@ public class ListUiModelImpl implements ListUiModel {
 
     @Override
     public void getRandomStringList(final ResultCallback<List<String>> callback) {
-        new Thread(new Runnable() {
+
+        ModelCommonHelper.EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
                 SystemClock.sleep(2000);
 
-                handler.post(new Runnable() {
+                ModelCommonHelper.MAIN_HANDLE.post(new Runnable() {
                     @Override
                     public void run() {
 
                         ArrayList<String> list = new ArrayList<>();
-                        for (String string : strings) {
-                            list.add(string);
-                        }
+                        Collections.addAll(list, strings);
                         callback.onResult(list);
                     }
                 });
             }
-        }).start();
+        });
     }
 }

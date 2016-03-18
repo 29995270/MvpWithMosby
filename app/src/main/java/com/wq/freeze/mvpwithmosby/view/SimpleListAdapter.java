@@ -42,15 +42,15 @@ public class SimpleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
-    public void appendDataSrc(String extra, boolean isRefresh) {
+    public void appendDataSrc(List<String> extra, boolean isRefresh) {
 
         if (dataSrc == null) return;
 
         if (isRefresh) {
-            dataSrc.add(0, extra);
+            dataSrc.addAll(0, extra);
             notifyItemInserted(0);
         } else {
-            dataSrc.add(extra);
+            dataSrc.addAll(extra);
             notifyItemInserted(dataSrc.size());
         }
     }

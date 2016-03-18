@@ -38,23 +38,34 @@ public class ListUiViewState implements ParcelableLceViewState<List<String>, Lis
 
     }
 
-    private ListUiViewState(Parcel source) {
+    public ListUiViewState(Parcel source) {
         readFromParcel(source);
     }
 
     @Override
     public void setStateShowContent(List<String> loadedData) {
         this.loadedData = (ArrayList<String>) loadedData;
+        state = STATE_SHOW_CONTENT;
     }
 
     @Override
     public void setStateShowError(Throwable e, boolean pullToRefresh) {
         this.isInPullToRefresh[0] = pullToRefresh;
+        state = STATE_SHOW_ERROR;
     }
 
     @Override
     public void setStateShowLoading(boolean pullToRefresh) {
         this.isInPullToRefresh[0] = pullToRefresh;
+        state = STATE_SHOW_LOADING;
+    }
+
+    public void setStateShowLoadMore() {
+        state = STATE_SHOW_LOAD_MORE;
+    }
+
+    public void setStateShowLoadMoreError() {
+        state = STATE_SHOW_LOAD_MORE_ERROR;
     }
 
     @Override
@@ -97,6 +108,9 @@ public class ListUiViewState implements ParcelableLceViewState<List<String>, Lis
                 break;
             case STATE_SHOW_LOADING:
                 view.showLoading(isInPullToRefresh[0]);
+                if (!isInPullToRefresh[0] && (loadedData == null || loadedData.size() == 0)) {
+                    view.loadData(false);
+                }
                 break;
             case STATE_SHOW_LOAD_MORE:
                 view.showLoadMore();

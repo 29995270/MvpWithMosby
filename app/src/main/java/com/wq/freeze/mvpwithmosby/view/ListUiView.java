@@ -9,6 +9,8 @@ import java.util.List;
  */
 public interface ListUiView extends MvpLceView<List<String>> {
     void showLoadMore();
+    void dismissLoadMore();
     void showLoadMoreError();
-    void loadMoreData();
+    void moreDataFromRefresh(String extra);
+    void moreDataFromLoadMore(List<String> extra);
 }
