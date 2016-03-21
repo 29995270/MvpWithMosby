@@ -7,7 +7,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -97,6 +96,15 @@ public class ListActivity extends MvpLceViewStateActivity<SwipeRefreshLayout, Li
     }
 
     @Override
+    public void showError(Throwable e, boolean pullToRefresh) {
+        super.showError(e, pullToRefresh);
+        if (pullToRefresh) {
+            refreshLayout.setRefreshing(false);
+            viewState.setStateShowContent(simpleListAdapter.getDataSrc());
+        }
+    }
+
+    @Override
     protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
         return pullToRefresh? "net error!!!": "oops, error!! touch me!!";
     }
@@ -139,16 +147,22 @@ public class ListActivity extends MvpLceViewStateActivity<SwipeRefreshLayout, Li
     @Override
     public void showLoadMore() {
         loadMoreView.setVisibility(View.VISIBLE);
+//        ((ListUiViewState) viewState).setStateShowLoadMore();
+        loadMoreListener.isLoading = true;
     }
 
     @Override
     public void dismissLoadMore() {
         loadMoreView.setVisibility(View.GONE);
+//        viewState.setStateShowContent(simpleListAdapter.getDataSrc());
+        loadMoreListener.isLoading = false;
     }
 
     @Override
     public void showLoadMoreError() {
         Toast.makeText(this, "load more error", Toast.LENGTH_SHORT).show();
+        ((ListUiViewState) viewState).setStateShowLoadMoreError();
+        dismissLoadMore();
     }
 
     @Override
@@ -156,15 +170,14 @@ public class ListActivity extends MvpLceViewStateActivity<SwipeRefreshLayout, Li
         simpleListAdapter.appendDataSrc(Collections.singletonList(extra), true);
         viewState.setStateShowContent(simpleListAdapter.getDataSrc());
         refreshLayout.setRefreshing(false);
-        recyclerView.smoothScrollToPosition(0);
+        recyclerView.scrollToPosition(0);
     }
 
     @Override
     public void moreDataFromLoadMore(List<String> extra) {
         simpleListAdapter.appendDataSrc(extra, false);
-        viewState.setStateShowContent(simpleListAdapter.getDataSrc());
-        loadMoreListener.isLoading = false;
         dismissLoadMore();
+        recyclerView.scrollToPosition(((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition() + 1);
     }
 
     @Override

@@ -116,6 +116,8 @@ public class ListUiViewState implements ParcelableLceViewState<List<String>, Lis
                 }
                 break;
             case STATE_SHOW_LOAD_MORE:
+                view.setData(loadedData);
+                view.showContent();
                 view.showLoadMore();
                 break;
             case STATE_SHOW_LOAD_MORE_ERROR:

@@ -1,7 +1,5 @@
 package com.wq.freeze.mvpwithmosby.model.impl;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.os.SystemClock;
 
 import com.wq.freeze.mvpwithmosby.model.ListUiModel;
@@ -29,7 +27,13 @@ public class ListUiModelImpl implements ListUiModel {
                 ModelCommonHelper.MAIN_HANDLE.post(new Runnable() {
                     @Override
                     public void run() {
-                        callback.onResult(String.valueOf(System.currentTimeMillis() + random.nextInt(1000000000)));
+
+                        if (System.currentTimeMillis() % 2 == 0) {
+                            callback.onResult(String.valueOf(System.currentTimeMillis() + random.nextInt(1000000000)));
+                        } else {
+                            callback.onError(null);
+                        }
+
                     }
                 });
             }
@@ -75,9 +79,14 @@ public class ListUiModelImpl implements ListUiModel {
                     @Override
                     public void run() {
 
-                        ArrayList<String> list = new ArrayList<>();
-                        Collections.addAll(list, strings);
-                        callback.onResult(list);
+                        if (System.currentTimeMillis() % 2 == 0) {
+                            ArrayList<String> list = new ArrayList<>();
+                            Collections.addAll(list, strings);
+                            callback.onResult(list);
+                        } else {
+                            callback.onError(null);
+                        }
+
                     }
                 });
             }
