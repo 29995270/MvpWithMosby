@@ -107,6 +107,9 @@ public class ListUiViewState implements ParcelableLceViewState<List<String>, Lis
                 view.showError(null, isInPullToRefresh[0]);
                 break;
             case STATE_SHOW_LOADING:
+                if (isInPullToRefresh[0]) {
+                    view.setData(loadedData);
+                }
                 view.showLoading(isInPullToRefresh[0]);
                 if (!isInPullToRefresh[0] && (loadedData == null || loadedData.size() == 0)) {
                     view.loadData(false);

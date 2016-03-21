@@ -28,15 +28,24 @@ public class ListPresenter extends MvpNullObjectBasePresenter<ListUiView> {
                 getView().setData(result);
                 getView().showContent();
             }
+
+            @Override
+            public void onError(Throwable e) {
+                getView().showError(e, false);
+            }
         });
     }
 
     public void refresh() {
-        getView().showLoading(true);
         listUiModel.getRandomSingleString(new Model.ResultCallback<String>() {
             @Override
             public void onResult(String result) {
                 getView().moreDataFromRefresh(result);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                getView().showError(e, true);
             }
         });
     }
@@ -47,6 +56,11 @@ public class ListPresenter extends MvpNullObjectBasePresenter<ListUiView> {
             @Override
             public void onResult(List<String> result) {
                 getView().moreDataFromLoadMore(result);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                getView().showLoadMoreError();
             }
         });
     }

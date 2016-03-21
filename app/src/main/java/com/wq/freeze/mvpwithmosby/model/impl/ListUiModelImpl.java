@@ -29,7 +29,7 @@ public class ListUiModelImpl implements ListUiModel {
                 ModelCommonHelper.MAIN_HANDLE.post(new Runnable() {
                     @Override
                     public void run() {
-                        callback.onResult(String.valueOf(System.currentTimeMillis() + random.nextInt(100000)));
+                        callback.onResult(String.valueOf(System.currentTimeMillis() + random.nextInt(1000000000)));
                     }
                 });
             }
@@ -53,6 +53,14 @@ public class ListUiModelImpl implements ListUiModel {
         "dummy message ddddd",
         "dummy message eeeee",
         "dummy message fffff",
+        "dummy message ggggg",
+        "dummy message hhhhh",
+        "dummy message iiiii",
+        "dummy message jjjjj",
+        "dummy message kkkkk",
+        "dummy message lllll",
+        "dummy message mmmmm",
+        "dummy message nnnnn"
     };
 
     @Override
